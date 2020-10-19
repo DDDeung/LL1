@@ -22,7 +22,7 @@ int main()
 	if (g.is_LL1())
 		g.printTable();
 	else
-		cout << "ÊäÈëÎÄ·¨²»ÊÇLL(1)ÐÍÎÄ·¨" << endl;
+		cout << "è¾“å…¥æ–‡æ³•ä¸æ˜¯LL(1)åž‹æ–‡æ³•" << endl;
 	*/
 	return 0;
 }
