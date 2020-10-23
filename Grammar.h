@@ -6,7 +6,7 @@
 #include <vector>
 using namespace std;
 
-// ²úÉúÊ½½á¹¹Ìå
+// äº§ç”Ÿå¼ç»“æ„ä½“
 struct pstring {
 	char left;
 	string right;
@@ -16,14 +16,15 @@ class Grammar
 {
 public:
 	Grammar();
-	// ¿½±´¹¹Ôìº¯Êı
+	// æ‹·è´æ„é€ å‡½æ•°
 	Grammar(const Grammar&);
-	// ÓÃ»§ÊäÈë³õÊ¼»¯ÎÄ·¨
+	// ç”¨æˆ·è¾“å…¥åˆå§‹åŒ–æ–‡æ³•
 	void init();
-	// ³õÊ¼»¯²úÉúÊ½¼¯ºÏ
+	// åˆå§‹åŒ–äº§ç”Ÿå¼é›†åˆ
 	void init_P();			
-	// ½«²úÉúÊ½ÓÒ²àµÚÒ»¸ö×Ö·ûÎª·ÇÖÕ½á·ûµÄ½øĞĞ´úÈëÌæ»»
+	// å°†äº§ç”Ÿå¼å³ä¾§ç¬¬ä¸€ä¸ªå­—ç¬¦ä¸ºéç»ˆç»“ç¬¦çš„è¿›è¡Œä»£å…¥æ›¿æ¢
 	void first_letter_substitution();
+<<<<<<< HEAD
 	// ½«²»¿É´ïµÄ²úÉúÊ½É¾³ı
 	void del_unreachable_production();
 	// ÌáÈ¡×ó¹«ÒòÊ½
@@ -31,68 +32,83 @@ public:
 	// Ïû³ı×óµİ¹é
 	void parsing_left_recursion();
 	// ¼ÆËãFirst¼¯ºÏ
+=======
+	// æå–å·¦å…¬å› å¼
+	void left_common_factor();
+	// è®¡ç®—Firsté›†åˆ
+>>>>>>> 563fd49d0e9ab69e515faae5f407a511da1c58f6
 	void cal_First();			
-	// ¼ÆËãFollow¼¯ºÏ
+	// è®¡ç®—Followé›†åˆ
 	void cal_Follow();		
-	// µ÷ÓÃµİ¹é·½·¨¼ÆËãFollow¼¯ºÏ
+	// è°ƒç”¨é€’å½’æ–¹æ³•è®¡ç®—Followé›†åˆ
 	void cal_Follow_recur();
-	// ¼ÆËãSelect¼¯ºÏ
+	// è®¡ç®—Selecté›†åˆ
 	void cal_Select();
-	// Éú³ÉÔ¤²â·ÖÎö±í£¬µ±Í¬Ò»µ¥Ôª¸ñÓĞ¶à¸öÊ½×ÓÊ±£¬·µ»Øfalse
+	// ç”Ÿæˆé¢„æµ‹åˆ†æè¡¨ï¼Œå½“åŒä¸€å•å…ƒæ ¼æœ‰å¤šä¸ªå¼å­æ—¶ï¼Œè¿”å›false
 	bool get_Table();
-	// ÅĞ¶ÏÊÇ·ñÎªLL(1)ÎÄ·¨
+	// åˆ¤æ–­æ˜¯å¦ä¸ºLL(1)æ–‡æ³•
 	bool is_LL1();
+<<<<<<< HEAD
 	// Ô¤²â·ÖÎö·¨½øĞĞÓï·¨·ÖÎö
 	bool grammar_parsing();
 	// ¶ÔÄ³¸ö·ÇÖÕ½á·ûÇóFirst¼¯ºÏ
+=======
+	// å¯¹æŸä¸ªéç»ˆç»“ç¬¦æ±‚Firsté›†åˆ
+>>>>>>> 563fd49d0e9ab69e515faae5f407a511da1c58f6
 	void get_First_recur(char);				
-	// ²»µİ¹éµÄÇó³öFollow¼¯ºÏ
+	// ä¸é€’å½’çš„æ±‚å‡ºFollowé›†åˆ
 	void get_Follow();					
-	// ¶ÔÄ³¸ö·ÇÖÕ½á·ûÇóFollow¼¯ºÏ
+	// å¯¹æŸä¸ªéç»ˆç»“ç¬¦æ±‚Followé›†åˆ
 	void get_Follow_recur(char,int);	
-	// ÅĞ¶ÏÊÇ·ñÎªÖÕ½á·û
+	// åˆ¤æ–­æ˜¯å¦ä¸ºç»ˆç»“ç¬¦
 	bool inVt(char);					
-	// ÅĞ¶ÏÊÇ·ñÎª·ÇÖÕ½á·û
+	// åˆ¤æ–­æ˜¯å¦ä¸ºéç»ˆç»“ç¬¦
 	bool inVn(char);				
-	// ÇóÖÕ½á·ûÔÚÔ¤²â·ÖÎö±íÖĞµÄÁĞ±ê
+	// æ±‚ç»ˆç»“ç¬¦åœ¨é¢„æµ‹åˆ†æè¡¨ä¸­çš„åˆ—æ ‡
 	int index_in_terminal(char);
-	// Çó·ÇÖÕ½á·ûÔÚÔ¤²â·ÖÎö±íÖĞµÄĞĞ±ê
+	// æ±‚éç»ˆç»“ç¬¦åœ¨é¢„æµ‹åˆ†æè¡¨ä¸­çš„è¡Œæ ‡
 	int index_in_nonterminal(char);
-	// Êä³ö²úÉúÊ½¼¯
+	// è¾“å‡ºäº§ç”Ÿå¼é›†
 	void printProduction();
-	// Êä³öFirst¼¯
+	// è¾“å‡ºFirsté›†
 	void printFirst();					
-	// Êä³öFollow¼¯
+	// è¾“å‡ºFollowé›†
 	void printFollow();					
-	// Êä³öSelect¼¯
+	// è¾“å‡ºSelecté›†
 	void printSelect();			
-	// Êä³öÔ¤²â·ÖÎö±í
+	// è¾“å‡ºé¢„æµ‹åˆ†æè¡¨
 	void printTable();
 	~Grammar();
 
 private:
-	// ÖÕ½á·û¼¯£¬Ğ¡Ğ´×ÖÄ¸
+	// ç»ˆç»“ç¬¦é›†ï¼Œå°å†™å­—æ¯
 	set<char> Vt;						
-	// ·ÇÖÕ½á·û¼¯£¬´óĞ´×ÖÄ¸
+	// éç»ˆç»“ç¬¦é›†ï¼Œå¤§å†™å­—æ¯
 	set<char> Vn;						
-	// ²úÉúÊ½¼¯ºÏP
+	// äº§ç”Ÿå¼é›†åˆP
 	vector<pstring> P;					
-	// ²úÉúÊ½ÖĞ°üº¬µÄÖÕ½á·û¼¯
+	// äº§ç”Ÿå¼ä¸­åŒ…å«çš„ç»ˆç»“ç¬¦é›†
 	set<char> terminal;					
-	// ²úÉúÊ½ÖĞ°üº¬µÄ·ÇÖÕ½á·û¼¯
+	// äº§ç”Ÿå¼ä¸­åŒ…å«çš„éç»ˆç»“ç¬¦é›†
 	set<char> nonterminal;				
-	// First¼¯ºÏ
+	// Firsté›†åˆ
 	map<char, set<char>> first_set;		
-	// Follow¼¯ºÏ
+	// Followé›†åˆ
 	map<char, set<char>> follow_set;	
-	// Select¼¯ºÏ
+	// Selecté›†åˆ
 	vector<set<char>> select_set;		
-	// Ô¤²â·ÖÎö±í
+	// é¢„æµ‹åˆ†æè¡¨
 	int** predict_table;
-	// ²úÉúÊ½ÊıÁ¿
+	// äº§ç”Ÿå¼æ•°é‡
 	int pnum;
+<<<<<<< HEAD
 	// ¿ªÊ¼·ûºÅ
 	char S;		
 	// LL(1)ÎÄ·¨±êÖ¾
 	bool LL1;
 };
+=======
+	// å¼€å§‹ç¬¦å·
+	char S;								
+};
+>>>>>>> 563fd49d0e9ab69e515faae5f407a511da1c58f6

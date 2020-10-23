@@ -5,13 +5,13 @@ Grammar::Grammar()
 {
 	int i, j;
 
-	#pragma region ³õÊ¼»¯ÖÕ½á¼¯Óë·ÇÖÕ½á¼¯
+	#pragma region åˆå§‹åŒ–ç»ˆç»“é›†ä¸éç»ˆç»“é›†
 	for (i = 97, j = 65; (i <= 122) && (j <= 90); i++, j++)
 	{
 		this->Vt.insert(char(i));
 		this->Vn.insert(char(j));
 	}
-	// ÌØ±ğµÄ£¬ÖÕ½á·ûÖĞÓÃ$±íÊ¾¿Õ´®£¬#±íÊ¾½áÊø·û
+	// ç‰¹åˆ«çš„ï¼Œç»ˆç»“ç¬¦ä¸­ç”¨$è¡¨ç¤ºç©ºä¸²ï¼Œ#è¡¨ç¤ºç»“æŸç¬¦
 	Vt.insert('$');
 	Vt.insert('#');
 	#pragma endregion
@@ -22,7 +22,7 @@ Grammar::Grammar()
 	this->LL1 = false;
 }
 
-// ¿½±´¹¹Ôìº¯Êı
+// æ‹·è´æ„é€ å‡½æ•°
 Grammar::Grammar(const Grammar& g)
 {
 	this->Vn = g.Vn;
@@ -37,15 +37,15 @@ Grammar::Grammar(const Grammar& g)
 	this->S = g.S;
 }
 
-// ÓÃ»§ÊäÈë³õÊ¼»¯ÎÄ·¨
+// ç”¨æˆ·è¾“å…¥åˆå§‹åŒ–æ–‡æ³•
 void Grammar::init()
 {
-	#pragma region ³õÊ¼»¯¿ªÊ¼·ûºÅºÍ²úÉúÊ½¼¯ºÏ
-	// ÓÃ»§ÊäÈë¿ªÊ¼·ûºÅ
+	#pragma region åˆå§‹åŒ–å¼€å§‹ç¬¦å·å’Œäº§ç”Ÿå¼é›†åˆ
+	// ç”¨æˆ·è¾“å…¥å¼€å§‹ç¬¦å·
 	char start;
 	while (true)
 	{
-		cout << "ÇëÊäÈë¿ªÊ¼·ûºÅ£º";
+		cout << "è¯·è¾“å…¥å¼€å§‹ç¬¦å·ï¼š";
 		cin >> start;
 		if (inVn(start))
 		{
@@ -54,23 +54,28 @@ void Grammar::init()
 		}
 		else
 		{
-			cout << "¿ªÊ¼·ûºÅÓ¦ÔÚ·ÇÖÕ½á¼¯ÖĞ£¡ÇëÖØĞÂÊäÈë" << endl;
+			cout << "å¼€å§‹ç¬¦å·åº”åœ¨éç»ˆç»“é›†ä¸­ï¼è¯·é‡æ–°è¾“å…¥" << endl;
 		}
 	}
 	cout << endl;
+<<<<<<< HEAD
 	#pragma endregion
 	
 	// ÓÃ»§ÊäÈë²úÉúÊ½¼¯ºÏ
+=======
+
+	// ç”¨æˆ·è¾“å…¥äº§ç”Ÿå¼é›†åˆ
+>>>>>>> 563fd49d0e9ab69e515faae5f407a511da1c58f6
 	init_P();
 }
 
-// ³õÊ¼»¯²úÉúÊ½¼¯ºÏ
+// åˆå§‹åŒ–äº§ç”Ÿå¼é›†åˆ
 void Grammar::init_P()
 {
 	int i, flag;
 	this->pnum = 0;
-	cout << "ÇëÊäÈë²úÉúÊ½£º(ÊäÈë0½áÊø)" << endl;
-	cout << "ĞÎÈç:S-aA£¬¿Õ´®ÒÔ$±íÊ¾" << endl << endl;
+	cout << "è¯·è¾“å…¥äº§ç”Ÿå¼ï¼š(è¾“å…¥0ç»“æŸ)" << endl;
+	cout << "å½¢å¦‚:S-aAï¼Œç©ºä¸²ä»¥$è¡¨ç¤º" << endl << endl;
 	while (true)
 	{
 		flag = 0;
@@ -86,7 +91,7 @@ void Grammar::init_P()
 			this->nonterminal.insert(left);
 			if (!inVn(left))
 			{
-				cout << "²úÉúÊ½×ó¶ËÓ¦Îª·ÇÖÕ½á·û£¡ÇëÖØĞÂÊäÈë" << endl << endl;
+				cout << "äº§ç”Ÿå¼å·¦ç«¯åº”ä¸ºéç»ˆç»“ç¬¦ï¼è¯·é‡æ–°è¾“å…¥" << endl << endl;
 			}
 			else
 			{
@@ -94,8 +99,21 @@ void Grammar::init_P()
 				int i = p.find("-");
 				if (i == string::npos)
 				{
+<<<<<<< HEAD
 					cout << "²úÉúÊ½¸ñÊ½ÓĞÎó!" << endl;
 					flag = 1;
+=======
+					if (!inVt(right[i]) && !inVn(right[i]))
+					{
+						cout << "äº§ç”Ÿå¼å·¦éƒ¨å«éæ³•å­—ç¬¦ï¼";
+						flag = 1;
+						break;
+					}
+					if (inVt(right[i]))
+					{
+						this->terminal.insert(right[i]);
+					}
+>>>>>>> 563fd49d0e9ab69e515faae5f407a511da1c58f6
 				}
 				else
 				{
@@ -103,6 +121,7 @@ void Grammar::init_P()
 
 					for (i = 0; i < right.length(); i++)
 					{
+<<<<<<< HEAD
 						if (!inVt(right[i]) && !inVn(right[i]))
 						{
 							cout << "²úÉúÊ½×ó²¿º¬·Ç·¨×Ö·û£¡";
@@ -127,6 +146,11 @@ void Grammar::init_P()
 							flag = 1;
 							break;
 						}
+=======
+						// é‡å¤æ ‡å¿—
+						flag = 1;
+						break;
+>>>>>>> 563fd49d0e9ab69e515faae5f407a511da1c58f6
 					}
 				}
 
@@ -137,17 +161,18 @@ void Grammar::init_P()
 					temp.right = right;
 					this->P.push_back(temp);
 					this->pnum++;
-					cout << "²úÉúÊ½Ìí¼Ó³É¹¦" << endl << endl;
+					cout << "äº§ç”Ÿå¼æ·»åŠ æˆåŠŸ" << endl << endl;
 				}
 				else
 				{
-					cout << "ÇëÊäÈëĞÂµÄ²úÉúÊ½£º" << endl << endl;
+					cout << "è¯·è¾“å…¥æ–°çš„äº§ç”Ÿå¼ï¼š" << endl << endl;
 				}
 			}
 		}
 	}
 }
 
+<<<<<<< HEAD
 // ¼ì²é²úÉúÊ½pÊÇ·ñÔÚ²úÉúÊ½¼¯ºÏÖĞ
 bool find_production(vector<pstring> Pset, pstring p)
 {
@@ -161,6 +186,9 @@ bool find_production(vector<pstring> Pset, pstring p)
 }
 
 // ½«²úÉúÊ½ÓÒ²àµÚÒ»¸ö×Ö·ûÎª·ÇÖÕ½á·ûµÄ½øĞĞ´úÈëÌæ»»
+=======
+// å°†äº§ç”Ÿå¼å³ä¾§ç¬¬ä¸€ä¸ªå­—ç¬¦ä¸ºéç»ˆç»“ç¬¦çš„è¿›è¡Œä»£å…¥æ›¿æ¢
+>>>>>>> 563fd49d0e9ab69e515faae5f407a511da1c58f6
 void Grammar::first_letter_substitution()
 {
 	int i, j;
@@ -193,7 +221,12 @@ void Grammar::first_letter_substitution()
 
 				for (j = 0; j < this->pnum; j++)
 				{
+<<<<<<< HEAD
 					if (this->P[j].left == r0)
+=======
+					// i==jæ˜¯å·¦é€’å½’çš„æƒ…å†µï¼Œä»£å…¥è¿™é‡Œä¸åšå¤„ç†
+					if (this->P[j].left == r0 && i != j)
+>>>>>>> 563fd49d0e9ab69e515faae5f407a511da1c58f6
 					{
 						pstring newp;
 						// Èç¹ûP[i]ºÍP[j]¶¼ÔÚrecur_saveÖĞ£¬ËµÃ÷»áµ¼ÖÂÎŞÏŞ´úÈë£¬Ôò²»½øĞĞ´úÈë
@@ -291,16 +324,16 @@ void Grammar::del_unreachable_production()
 	this->pnum = this->P.size();
 }
 
-// ÌáÈ¡×ó¹«ÒòÊ½
+// æå–å·¦å…¬å› å¼
 void Grammar::left_common_factor()
 {
 	int i, j;
-	char new_nt = 90;	// ĞÂÔö·ÇÖÕ½á·û£¬´ÓZ¿ªÊ¼ÏòA¼ÓÈë
-	int flag = 1;		// Èç¹ûÓĞ×ó¹«ÒòÊ½£¬ÄÇ¾ÍÒª¶Ô²úÉúÊ½¼¯ºÏ×ö³ö¸Ä±ä£¬flagÖÃ1
+	char new_nt = 90;	// æ–°å¢éç»ˆç»“ç¬¦ï¼Œä»Zå¼€å§‹å‘AåŠ å…¥
+	int flag = 1;		// å¦‚æœæœ‰å·¦å…¬å› å¼ï¼Œé‚£å°±è¦å¯¹äº§ç”Ÿå¼é›†åˆåšå‡ºæ”¹å˜ï¼Œflagç½®1
 	while (flag != 0)
 	{
 		flag = 0;
-		set<int> lcf;	// ÓÃÒ»¸öset¼ÇÂ¼ÓµÓĞ×ó¹«Òò×ÓµÄ²úÉúÊ½ÏÂ±ê£¬µ¹ĞòÉ¾³ı¾Í²»»á´òÂÒ
+		set<int> lcf;	// ç”¨ä¸€ä¸ªsetè®°å½•æ‹¥æœ‰å·¦å…¬å› å­çš„äº§ç”Ÿå¼ä¸‹æ ‡ï¼Œå€’åºåˆ é™¤å°±ä¸ä¼šæ‰“ä¹±
 		for (i = 0; i < this->pnum; i++)
 		{
 			lcf.clear();
@@ -341,11 +374,11 @@ void Grammar::left_common_factor()
 						string new_right;
 						if (this->P[*lcf_iter].right.length() == length)
 						{
-							new_right = '$';	// S->ab£¬ÌáÈ¡abºó£¬Z->¦Å
+							new_right = '$';	// S->abï¼Œæå–abåï¼ŒZ->Îµ
 						}
 						else
 						{
-							new_right = this->P[*lcf_iter].right.substr(length, this->P[*lcf_iter].right.length());  // S->abB£¬ÌáÈ¡abºó£¬Z->B
+							new_right = this->P[*lcf_iter].right.substr(length, this->P[*lcf_iter].right.length());  // S->abBï¼Œæå–abåï¼ŒZ->B
 						}
 						pstring new_p;
 						new_p.left = new_nt;
@@ -376,6 +409,7 @@ void Grammar::left_common_factor()
 	}
 }
 
+<<<<<<< HEAD
 // Ïû³ı×óµİ¹é
 void Grammar::parsing_left_recursion()
 {
@@ -459,26 +493,29 @@ void Grammar::parsing_left_recursion()
 }
 
 // ¼ÆËãFirst¼¯ºÏ
+=======
+// è®¡ç®—Firsté›†åˆ
+>>>>>>> 563fd49d0e9ab69e515faae5f407a511da1c58f6
 void Grammar::cal_First()
 {
-	// Ê×ÏÈ¸øÃ¿¸ö·ÇÖÕ½á·û³õÊ¼»¯Ò»¸ö¿ÕµÄFirst¼¯ºÏ
+	// é¦–å…ˆç»™æ¯ä¸ªéç»ˆç»“ç¬¦åˆå§‹åŒ–ä¸€ä¸ªç©ºçš„Firsté›†åˆ
 	set<char>::iterator nterm_iter;
 	for (nterm_iter = this->nonterminal.begin(); nterm_iter != this->nonterminal.end(); nterm_iter++)
 	{
 		set<char> value;
 		this->first_set.insert(pair<char, set<char>>(*nterm_iter, value));
 	}
-	// ¶ÔÃ¿¸ö·ÇÖÕ½á·ûÇóFirst¼¯ºÏ
+	// å¯¹æ¯ä¸ªéç»ˆç»“ç¬¦æ±‚Firsté›†åˆ
 	for (nterm_iter = this->nonterminal.begin(); nterm_iter != this->nonterminal.end(); nterm_iter++)
 	{
 		get_First_recur(*nterm_iter);
 	}
 }
 
-// µ÷ÓÃµİ¹é·½·¨¼ÆËãFollow¼¯ºÏ
+// è°ƒç”¨é€’å½’æ–¹æ³•è®¡ç®—Followé›†åˆ
 void Grammar::cal_Follow_recur()
 {
-	// Ê×ÏÈ¸øÃ¿¸ö·ÇÖÕ½á·û³õÊ¼»¯Follow¼¯ºÏ£¬ÌØ±ğµÄ¶ÔSÌí¼Ó#½áÊø·û
+	// é¦–å…ˆç»™æ¯ä¸ªéç»ˆç»“ç¬¦åˆå§‹åŒ–Followé›†åˆï¼Œç‰¹åˆ«çš„å¯¹Sæ·»åŠ #ç»“æŸç¬¦
 	set<char>::iterator nterm_iter;
 	for (nterm_iter = this->nonterminal.begin(); nterm_iter != this->nonterminal.end(); nterm_iter++)
 	{
@@ -490,17 +527,17 @@ void Grammar::cal_Follow_recur()
 		this->follow_set.insert(pair<char, set<char>>(*nterm_iter, value));
 	}
 	
-	// ¶ÔÃ¿¸ö·ÇÖÕ½á·ûÇóFollow¼¯ºÏ
+	// å¯¹æ¯ä¸ªéç»ˆç»“ç¬¦æ±‚Followé›†åˆ
 	for (nterm_iter = this->nonterminal.begin(); nterm_iter != this->nonterminal.end(); nterm_iter++)
 	{
 		get_Follow_recur(*nterm_iter, 1);
 	}
 }
 
-// ²»Ê¹ÓÃµİ¹é¼ÆËãFollow¼¯ºÏ
+// ä¸ä½¿ç”¨é€’å½’è®¡ç®—Followé›†åˆ
 void Grammar::cal_Follow()
 {
-	// Ê×ÏÈ¸øÃ¿¸ö·ÇÖÕ½á·û³õÊ¼»¯Follow¼¯ºÏ£¬ÌØ±ğµÄ¶ÔSÌí¼Ó#½áÊø·û
+	// é¦–å…ˆç»™æ¯ä¸ªéç»ˆç»“ç¬¦åˆå§‹åŒ–Followé›†åˆï¼Œç‰¹åˆ«çš„å¯¹Sæ·»åŠ #ç»“æŸç¬¦
 	set<char>::iterator nterm_iter;
 	for (nterm_iter = this->nonterminal.begin(); nterm_iter != this->nonterminal.end(); nterm_iter++)
 	{
@@ -515,30 +552,30 @@ void Grammar::cal_Follow()
 	get_Follow();
 }
 
-// ¼ÆËãSelect¼¯ºÏ
+// è®¡ç®—Selecté›†åˆ
 void Grammar::cal_Select()
 {
 	int i, j;
 	for (i = 0; i < this->pnum; i++)
 	{
-		int countEmpty = 0;			// ÓÒ¶ËÈ«²¿ÄÜÍÆ³ö$£¬ÔòÊ¹ÓÃ Select(A-a) = First(a)-$ ¡È Follow(A)
+		int countEmpty = 0;			// å³ç«¯å…¨éƒ¨èƒ½æ¨å‡º$ï¼Œåˆ™ä½¿ç”¨ Select(A-a) = First(a)-$ âˆª Follow(A)
 		set<char> select;
 		for (j = 0; j < this->P[i].right.length(); j++)
 		{
 			char rj = this->P[i].right[j];
-			// Óöµ½ÖÕ½á·û
+			// é‡åˆ°ç»ˆç»“ç¬¦
 			if (inVt(rj))		
 			{
-				if (rj != '$')	// ²»ÊÇ¿Õ´®£¬ÔòÖ±½Ó¼ÓÈë²¢½áÊø
+				if (rj != '$')	// ä¸æ˜¯ç©ºä¸²ï¼Œåˆ™ç›´æ¥åŠ å…¥å¹¶ç»“æŸ
 					select.insert(this->P[i].right[j]);
 				else if (rj == '$')
 					countEmpty++;
 				break;
 			}
-			// Óöµ½·ÇÖÕ½á·û
+			// é‡åˆ°éç»ˆç»“ç¬¦
 			else
 			{
-				// ½«ÆäFirst¼¯ºÏÖĞ·Ç$·û¼ÓÈë
+				// å°†å…¶Firsté›†åˆä¸­é$ç¬¦åŠ å…¥
 				set<char>::iterator value_iter;
 				for (value_iter = this->first_set[rj].begin(); value_iter != this->first_set[rj].end(); value_iter++)
 				{
@@ -556,7 +593,7 @@ void Grammar::cal_Select()
 			}
 		}
 
-		// ½«Follow¼¯ºÏ²¢Èë
+		// å°†Followé›†åˆå¹¶å…¥
 		if (countEmpty == this->P[i].right.length())
 		{
 			set<char>::iterator value_iter;
@@ -570,12 +607,12 @@ void Grammar::cal_Select()
 	}
 }
 
-// Éú³ÉÔ¤²â·ÖÎö±í£¬µ±Í¬Ò»µ¥Ôª¸ñÓĞ¶à¸öÊ½×ÓÊ±£¬·µ»Øfalse
+// ç”Ÿæˆé¢„æµ‹åˆ†æè¡¨ï¼Œå½“åŒä¸€å•å…ƒæ ¼æœ‰å¤šä¸ªå¼å­æ—¶ï¼Œè¿”å›false
 bool Grammar::get_Table()
 {
 	int i, j;
 
-	#pragma region ³õÊ¼»¯Ô¤²â·ÖÎö±í
+	#pragma region åˆå§‹åŒ–é¢„æµ‹åˆ†æè¡¨
 	this->predict_table = new int* [this->nonterminal.size()];
 	for (i = 0; i < this->nonterminal.size(); i++)
 	{
@@ -611,7 +648,7 @@ bool Grammar::get_Table()
 
 }
 
-// ÅĞ¶ÏÊÇ·ñÎªLL(1)ÎÄ·¨
+// åˆ¤æ–­æ˜¯å¦ä¸ºLL(1)æ–‡æ³•
 bool Grammar::is_LL1()
 {
 	if (!get_Table())
@@ -623,6 +660,7 @@ bool Grammar::is_LL1()
 	return true;
 }
 
+<<<<<<< HEAD
 bool Grammar::grammar_parsing()
 {
 	int i, j = 0;
@@ -700,37 +738,40 @@ bool Grammar::grammar_parsing()
 }
 
 // ÇótargetµÄFirst¼¯ºÏ
+=======
+// æ±‚targetçš„Firsté›†åˆ
+>>>>>>> 563fd49d0e9ab69e515faae5f407a511da1c58f6
 void Grammar::get_First_recur(char target)
 {
 	int i, j;
-	int isEmpty = 0;		// ²úÉú¿Õ´®±êÊ¶·û£¬0±íÊ¾²»ÄÜ²úÉú$
-	int countEmpty = 0;		// Ö»ÓĞµ±X->Y1Y2...YnÖĞ£¬Y1-Yn¶¼¿ÉÒÔ²úÉú¿Õ´®Ê±£¬First(X)²ÅÓĞ#
+	int isEmpty = 0;		// äº§ç”Ÿç©ºä¸²æ ‡è¯†ç¬¦ï¼Œ0è¡¨ç¤ºä¸èƒ½äº§ç”Ÿ$
+	int countEmpty = 0;		// åªæœ‰å½“X->Y1Y2...Ynä¸­ï¼ŒY1-Ynéƒ½å¯ä»¥äº§ç”Ÿç©ºä¸²æ—¶ï¼ŒFirst(X)æ‰æœ‰#
 	for (i = 0; i < this->pnum; i++)
 	{
-		// Óë²úÉúÊ½×ó¶ËÆ¥Åä
+		// ä¸äº§ç”Ÿå¼å·¦ç«¯åŒ¹é…
 		if (this->P[i].left == target)
 		{
-			// ÖÕ½á·ûÖ±½Ó¼ÓÈëFirst
+			// ç»ˆç»“ç¬¦ç›´æ¥åŠ å…¥First
 			if (inVt(this->P[i].right[0]))
 			{
 				this->first_set[target].insert(this->P[i].right[0]);
 			}
 			else
 			{
-				// X->Y1Y2...Yj...YkÕâÑùµÄ±í´ïÊ½
+				// X->Y1Y2...Yj...Ykè¿™æ ·çš„è¡¨è¾¾å¼
 				for (j = 0; j < this->P[i].right.length(); j++)
 				{
 					char Yj = this->P[i].right[j];
-					// Èç¹ûYjÊÇÖÕ½á·û£¬ÔòÍ£Ö¹µİ¹é
+					// å¦‚æœYjæ˜¯ç»ˆç»“ç¬¦ï¼Œåˆ™åœæ­¢é€’å½’
 					if (inVt(Yj))
 					{
 						this->first_set[target].insert(Yj);
 						break;
 					}
-					// YjÊÇ·ÇÖÕ½á·ûÔòÓ¦µİ¹é£¬ÏÈÇó³öYjµÄFirst¼¯
+					// Yjæ˜¯éç»ˆç»“ç¬¦åˆ™åº”é€’å½’ï¼Œå…ˆæ±‚å‡ºYjçš„Firsté›†
 					get_First_recur(Yj);
 
-					// ½«YjµÄ½á¹û¸´ÖÆ¸øX
+					// å°†Yjçš„ç»“æœå¤åˆ¶ç»™X
 					set<char>::iterator value_iter;
 					for (value_iter = this->first_set[Yj].begin(); value_iter != this->first_set[Yj].end(); value_iter++)
 					{
@@ -744,11 +785,11 @@ void Grammar::get_First_recur(char target)
 						}
 					}
 
-					if (isEmpty == 0)	// Yj²»ÄÜ²úÉú¿Õ£¬µü´ú½áÊø
+					if (isEmpty == 0)	// Yjä¸èƒ½äº§ç”Ÿç©ºï¼Œè¿­ä»£ç»“æŸ
 					{
 						break;
 					}
-					else       // Èç¹ûÄÜ²úÉú¿Õ´®£¬ÄÇÃ´ĞèÒªÈ·ÈÏÓÒ²àÈ«¶¼ÄÜ²úÉú¿Õ´®
+					else       // å¦‚æœèƒ½äº§ç”Ÿç©ºä¸²ï¼Œé‚£ä¹ˆéœ€è¦ç¡®è®¤å³ä¾§å…¨éƒ½èƒ½äº§ç”Ÿç©ºä¸²
 					{
 						countEmpty += 1;
 						isEmpty = 0;
@@ -763,31 +804,31 @@ void Grammar::get_First_recur(char target)
 	}
 }
 
-// µİ¹éµÄÇótargetµÄFollow¼¯ºÏ
+// é€’å½’çš„æ±‚targetçš„Followé›†åˆ
 void Grammar::get_Follow_recur(char target,int recur_count)
 {
 	int i, j;
 	for (i = 0; i < this->pnum; i++)
 	{
-		// ÏŞÖÆ×î´óµİ¹é´ÎÊı£¬·ÀÖ¹ÓÒµİ¹é²úÉúÊ½ÇóFollowÊ±ËÀÑ­»·
+		// é™åˆ¶æœ€å¤§é€’å½’æ¬¡æ•°ï¼Œé˜²æ­¢å³é€’å½’äº§ç”Ÿå¼æ±‚Followæ—¶æ­»å¾ªç¯
 		if (recur_count > this->pnum)
 		{
 			break;
 		}
-		int index = this->P[i].right.find(target);	// ÕÒµ½targetÔÚ²úÉúÊ½ÖĞP[i]ÓÒ¶ËµÄÏÂ±ê
+		int index = this->P[i].right.find(target);	// æ‰¾åˆ°targetåœ¨äº§ç”Ÿå¼ä¸­P[i]å³ç«¯çš„ä¸‹æ ‡
 
-		// !npos±íÊ¾ÕÒµ½target£¬ÏÂÃæ¶ÔĞÎÈçS->aABÕâÑùµÄ²úÉúÊ½(A²»Îª×îÓÒ)
+		// !nposè¡¨ç¤ºæ‰¾åˆ°targetï¼Œä¸‹é¢å¯¹å½¢å¦‚S->aABè¿™æ ·çš„äº§ç”Ÿå¼(Aä¸ä¸ºæœ€å³)
 		if (index != string::npos && index < this->P[i].right.length() - 1)
 		{
 			char next = this->P[i].right[index + 1];
-			// Èç¹ûÊÇÖÕ½á·ûÖ±½Ó¼ÓÈë
+			// å¦‚æœæ˜¯ç»ˆç»“ç¬¦ç›´æ¥åŠ å…¥
 			if (inVt(next))
 			{
 				this->follow_set[target].insert(next);
 			}
 			else
 			{
-				int hasEmpty = 0;	// º¬ÓĞÖÕ½á·û±êÊ¶
+				int hasEmpty = 0;	// å«æœ‰ç»ˆç»“ç¬¦æ ‡è¯†
 				set<char>::iterator next_iter;
 				for (next_iter = this->first_set[next].begin(); next_iter != this->first_set[next].end(); next_iter++)
 				{
@@ -799,7 +840,7 @@ void Grammar::get_Follow_recur(char target,int recur_count)
 					}
 				}
 
-				// ÈôÎª S->aABC£¬µ±First(B)º¬ÓĞ$Ê±£¬Ê×ÏÈ×öFollow(A)+= First(B)-$£¬¼´ÉÏÃæ×öµÄ²¿·Ö£»È»ºó×öFollow(A)+=Follow(B)
+				// è‹¥ä¸º S->aABCï¼Œå½“First(B)å«æœ‰$æ—¶ï¼Œé¦–å…ˆåšFollow(A)+= First(B)-$ï¼Œå³ä¸Šé¢åšçš„éƒ¨åˆ†ï¼›ç„¶ååšFollow(A)+=Follow(B)
 				if (hasEmpty == 1 && ((index + 1) < this->P[i].right.length() - 1))
 				{
 					get_Follow_recur(next, ++recur_count);
@@ -810,8 +851,8 @@ void Grammar::get_Follow_recur(char target,int recur_count)
 					}
 				}
 
-				// ½ö¶Ô S->aAB£¬µ±First(B)º¬ÓĞ$Ê±£¬Follow(A)+=Follow(S)¡£¼´targetºóÃæµÄ·ÇÖÕ½á·ûÎª×îÓÒ¶Ë
-				// ÌØ±ğµÄ£¬¶ÔÓÚ S->aSA£¬First(A)º¬ÓĞ$£¬ĞèÒª±ÜÃâÎŞÏŞµİ¹é
+				// ä»…å¯¹ S->aABï¼Œå½“First(B)å«æœ‰$æ—¶ï¼ŒFollow(A)+=Follow(S)ã€‚å³targetåé¢çš„éç»ˆç»“ç¬¦ä¸ºæœ€å³ç«¯
+				// ç‰¹åˆ«çš„ï¼Œå¯¹äº S->aSAï¼ŒFirst(A)å«æœ‰$ï¼Œéœ€è¦é¿å…æ— é™é€’å½’
 				if (hasEmpty == 1 && ((index + 1) == this->P[i].right.length() - 1) && this->P[i].left != target)
 				{
 					get_Follow_recur(this->P[i].left, ++recur_count);
@@ -823,7 +864,7 @@ void Grammar::get_Follow_recur(char target,int recur_count)
 				}
 			}
 		}
-		// ¶ÔÓÚĞÎÈç S->aA£¬ÔòFollow(A)+=Follow(S)
+		// å¯¹äºå½¢å¦‚ S->aAï¼Œåˆ™Follow(A)+=Follow(S)
 		else if (index != string::npos && index == this->P[i].right.length() - 1 && target != this->P[i].left)
 		{
 			get_Follow_recur(this->P[i].left, ++recur_count);
@@ -836,17 +877,25 @@ void Grammar::get_Follow_recur(char target,int recur_count)
 	}
 }
 
-// ·Çµİ¹éµÄÇótargetµÄFollow¼¯ºÏ
+// éé€’å½’çš„æ±‚targetçš„Followé›†åˆ
 void Grammar::get_Follow()
 {
 	int i, j;
-	int flag = 1;		// µ±ËùÓĞFollow¼¯ºÏ²»ÔÙ±ä»¯Ê±£¬Í£Ö¹Ñ­»·
+	int flag = 1;		// å½“æ‰€æœ‰Followé›†åˆä¸å†å˜åŒ–æ—¶ï¼Œåœæ­¢å¾ªç¯
 
 	while (flag)
 	{
+<<<<<<< HEAD
 		flag = 0;		// ÉèflagÎª0£¬µ±ÓĞĞŞ¸ÄÊ±ÉèÎª1
 
 		// ¶ÔÃ¿¸ö²úÉúÊ½
+=======
+		flag = 0;		// è®¾flagä¸º0ï¼Œå½“æœ‰ä¿®æ”¹æ—¶è®¾ä¸º1
+		
+		set<char>::iterator vn_iter;
+		// å¯¹æ¯ä¸ªéç»ˆç»“ç¬¦
+		// å¯¹æ¯ä¸ªäº§ç”Ÿå¼
+>>>>>>> 563fd49d0e9ab69e515faae5f407a511da1c58f6
 		for (i = 0; i < this->pnum; i++)
 		{
 			char left = this->P[i].left;
@@ -876,7 +925,7 @@ void Grammar::get_Follow()
 									emptyFlag = 1;
 							}
 
-							if (emptyFlag == 1)		// A->aBCD£¬CÈôÄÜÍÆ³ö¦Å£¬Follow(B)+=Follow(C)
+							if (emptyFlag == 1)		// A->aBCDï¼ŒCè‹¥èƒ½æ¨å‡ºÎµï¼ŒFollow(B)+=Follow(C)
 							{
 								for (brj_iter = this->follow_set[brj].begin(); brj_iter != this->follow_set[brj].end(); brj_iter++)
 								{
@@ -901,7 +950,7 @@ void Grammar::get_Follow()
 	}
 }
 
-// ÅĞ¶Ï×Ö·ûÊÇ·ñÎª·ÇÖÕ½á·û
+// åˆ¤æ–­å­—ç¬¦æ˜¯å¦ä¸ºéç»ˆç»“ç¬¦
 bool Grammar::inVn(char s)
 {
 	if (this->Vn.find(s) != this->Vn.end())
@@ -909,7 +958,7 @@ bool Grammar::inVn(char s)
 	return false;
 }
 
-// ÅĞ¶Ï×Ö·ûÊÇ·ñÎªÖÕ½á·û
+// åˆ¤æ–­å­—ç¬¦æ˜¯å¦ä¸ºç»ˆç»“ç¬¦
 bool Grammar::inVt(char e)
 {
 	if (this->Vt.find(e) != this->Vt.end())
@@ -917,7 +966,7 @@ bool Grammar::inVt(char e)
 	return false;
 }
 
-// ÇóÖÕ½á·ûÔÚÔ¤²â·ÖÎö±íÖĞµÄÁĞ±ê
+// æ±‚ç»ˆç»“ç¬¦åœ¨é¢„æµ‹åˆ†æè¡¨ä¸­çš„åˆ—æ ‡
 int Grammar::index_in_terminal(char target)
 {
 	int i;
@@ -930,7 +979,7 @@ int Grammar::index_in_terminal(char target)
 	return 0;
 }
 
-// Çó·ÇÖÕ½á·ûÔÚÔ¤²â·ÖÎö±íÖĞµÄĞĞ±ê
+// æ±‚éç»ˆç»“ç¬¦åœ¨é¢„æµ‹åˆ†æè¡¨ä¸­çš„è¡Œæ ‡
 int Grammar::index_in_nonterminal(char target)
 {
 	int i;
@@ -943,11 +992,11 @@ int Grammar::index_in_nonterminal(char target)
 	return 0;
 }
 
-// Êä³ö²úÉúÊ½¼¯
+// è¾“å‡ºäº§ç”Ÿå¼é›†
 void Grammar::printProduction()
 {
 	int i;
-	cout << "--------------²úÉúÊ½¼¯ºÏ---------------" << endl << endl;
+	cout << "--------------äº§ç”Ÿå¼é›†åˆ---------------" << endl << endl;
 	for (i = 0; i < this->pnum; i++)
 	{
 		cout << this->P[i].left << "->" << this->P[i].right << endl;
@@ -955,14 +1004,14 @@ void Grammar::printProduction()
 	cout << endl;
 }
 
-// Êä³öFirst¼¯ºÏ
+// è¾“å‡ºFirsté›†åˆ
 void Grammar::printFirst()
 {
-	cout << "-----------First¼¯ºÏ-------------" << endl << endl;
+	cout << "-----------Firsté›†åˆ-------------" << endl << endl;
 	map<char, set<char>>::iterator first_iter;
 	for (first_iter = this->first_set.begin(); first_iter != this->first_set.end(); first_iter++)
 	{
-		cout << "·ÇÖÕ½á·û" << first_iter->first << ":";
+		cout << "éç»ˆç»“ç¬¦" << first_iter->first << ":";
 		set<char>::iterator value_iter;
 		for (value_iter = first_iter->second.begin(); value_iter != first_iter->second.end(); value_iter++)
 		{
@@ -973,14 +1022,14 @@ void Grammar::printFirst()
 	cout << endl;
 }
 
-// Êä³öFollow¼¯ºÏ
+// è¾“å‡ºFollowé›†åˆ
 void Grammar::printFollow()
 {
-	cout << "-----------Follow¼¯ºÏ-------------" << endl << endl;
+	cout << "-----------Followé›†åˆ-------------" << endl << endl;
 	map<char, set<char>>::iterator follow_iter;
 	for (follow_iter = this->follow_set.begin(); follow_iter != this->follow_set.end(); follow_iter++)
 	{
-		cout << "·ÇÖÕ½á·û" << follow_iter->first << ":";
+		cout << "éç»ˆç»“ç¬¦" << follow_iter->first << ":";
 		set<char>::iterator value_iter;
 		for (value_iter = follow_iter->second.begin(); value_iter != follow_iter->second.end(); value_iter++)
 		{
@@ -991,10 +1040,10 @@ void Grammar::printFollow()
 	cout << endl;
 }
 
-// Êä³öSelect¼¯ºÏ
+// è¾“å‡ºSelecté›†åˆ
 void Grammar::printSelect()
 {
-	cout << "------------Select¼¯ºÏ------------" << endl << endl;
+	cout << "------------Selecté›†åˆ------------" << endl << endl;
 	int i;
 	for (i = 0; i < this->pnum; i++)
 	{
@@ -1009,11 +1058,11 @@ void Grammar::printSelect()
 	cout << endl;
 }
 
-// Êä³öÔ¤²â·ÖÎö±í
+// è¾“å‡ºé¢„æµ‹åˆ†æè¡¨
 void Grammar::printTable()
 {
 	int i, j;
-	cout << "-------------Ô¤²â·ÖÎö±í---------------" << endl << endl;
+	cout << "-------------é¢„æµ‹åˆ†æè¡¨---------------" << endl << endl;
 	set<char>::iterator it;
 	for (it = this->terminal.begin(); it != this->terminal.end(); it++)
 	{
