@@ -24,8 +24,12 @@ public:
 	void init_P();			
 	// 将产生式右侧第一个字符为非终结符的进行代入替换
 	void first_letter_substitution();
+	// 将不可达的产生式删除
+	void del_unreachable_production();
 	// 提取左公因式
 	void left_common_factor();
+	// 消除左递归
+	void parsing_left_recursion();
 	// 计算First集合
 	void cal_First();			
 	// 计算Follow集合
@@ -38,6 +42,8 @@ public:
 	bool get_Table();
 	// 判断是否为LL(1)文法
 	bool is_LL1();
+	// 预测分析法进行语法分析
+	bool grammar_parsing();
 	// 对某个非终结符求First集合
 	void get_First_recur(char);				
 	// 不递归的求出Follow集合
@@ -86,5 +92,7 @@ private:
 	// 产生式数量
 	int pnum;
 	// 开始符号
-	char S;								
+	char S;		
+	// LL(1)文法标志
+	bool LL1;
 };

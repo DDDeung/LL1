@@ -1,4 +1,5 @@
 #include "Grammar.h"
+#include <stack>
 
 Grammar::Grammar()
 {
@@ -18,6 +19,7 @@ Grammar::Grammar()
 	this->pnum = 0;
 	this->S = 'S';
 	this->predict_table = new int* [1];
+	this->LL1 = false;
 }
 
 // 拷贝构造函数
@@ -56,10 +58,10 @@ void Grammar::init()
 		}
 	}
 	cout << endl;
-
+	#pragma endregion
+	
 	// 用户输入产生式集合
 	init_P();
-	#pragma endregion
 }
 
 // 初始化产生式集合
@@ -88,30 +90,43 @@ void Grammar::init_P()
 			}
 			else
 			{
-				int i = p.find("-");
 				string right;
-				right = p.substr(i + 1, p.length());
-				for (i = 0; i < right.length(); i++)
+				int i = p.find("-");
+				if (i == string::npos)
 				{
-					if (!inVt(right[i]) && !inVn(right[i]))
-					{
-						cout << "产生式左部含非法字符！";
-						flag = 1;
-						break;
-					}
-					if (inVt(right[i]))
-					{
-						this->terminal.insert(right[i]);
-					}
+					cout << "产生式格式有误!" << endl;
+					flag = 1;
 				}
-
-				for (i = 0; i < this->P.size(); i++)
+				else
 				{
-					if (this->P[i].left == left && this->P[i].right == right)
+					right = p.substr(i + 1, p.length());
+
+					for (i = 0; i < right.length(); i++)
 					{
-						// 重复标志
-						flag = 1;
-						break;
+						if (!inVt(right[i]) && !inVn(right[i]))
+						{
+							cout << "产生式左部含非法字符！";
+							flag = 1;
+							break;
+						}
+						if (inVt(right[i]))
+						{
+							this->terminal.insert(right[i]);
+						}
+						if (inVn(right[i]))
+						{
+							this->nonterminal.insert(right[i]);
+						}
+					}
+					
+					for (i = 0; i < this->P.size(); i++)
+					{
+						if (this->P[i].left == left && this->P[i].right == right)
+						{
+							// 重复标志
+							flag = 1;
+							break;
+						}
 					}
 				}
 
@@ -133,11 +148,28 @@ void Grammar::init_P()
 	}
 }
 
+// 检查产生式p是否在产生式集合中
+bool find_production(vector<pstring> Pset, pstring p)
+{
+	int i;
+	for (i = 0; i < Pset.size(); i++)
+	{
+		if (Pset[i].left == p.left && Pset[i].right == p.right)
+			return true;
+	}
+	return false;
+}
+
 // 将产生式右侧第一个字符为非终结符的进行代入替换
 void Grammar::first_letter_substitution()
 {
 	int i, j;
 	int flag = 1;
+	// 如果产生式有 A->Ba B->Ab，则会导致无限循环
+	// 如果有 A->Ba B->Bb，也会导致无限循环
+	// 因此我们将上述情况下，代入式和代入之后的结果式做记录，避免无限循环
+	vector<pstring> recur_save;		
+	int erase_index;
 	while (flag)
 	{
 		flag = 0;
@@ -145,7 +177,8 @@ void Grammar::first_letter_substitution()
 		{
 			char r0 = this->P[i].right[0];
 
-			if (inVn(r0))
+			// 左递归式不做代入处理
+			if (inVn(r0) && r0 != this->P[i].left)
 			{
 				flag = 1;
 				string right;
@@ -160,26 +193,37 @@ void Grammar::first_letter_substitution()
 
 				for (j = 0; j < this->pnum; j++)
 				{
-					// i==j是左递归的情况，代入这里不做处理
-					if (this->P[j].left == r0 && i != j)
+					if (this->P[j].left == r0)
 					{
 						pstring newp;
-						newp.left = this->P[i].left;
-						if (this->P[j].right == "$")
+						// 如果P[i]和P[j]都在recur_save中，说明会导致无限代入，则不进行代入
+						if (!(find_production(recur_save, this->P[i]) && find_production(recur_save, this->P[j])))
 						{
-							newp.right += right;
+							newp.left = this->P[i].left;
+							if (this->P[j].right == "$")
+							{
+								newp.right += right;
+							}
+							else
+							{
+								newp.right = this->P[j].right + right;
+							}
+							if (newp.right.length() == 0)
+								newp.right += "$";
+							this->P.push_back(newp);
+							erase_index = i;
+
+							if (this->P[j].right[0] == this->P[i].left || this->P[j].right[0] == r0)
+							{
+								// P[i]: A->Ba	P[j]: B->Ab，代入之后得到A->Aba，将该式子与代入式加入recur_save
+								// 若P[j]是一个左递归式，也要将其加入recur_save，目的是防止其被删除
+								recur_save.push_back(this->P[j]);
+								recur_save.push_back(newp);
+							}
 						}
-						else
-						{
-							newp.right = this->P[j].right + right;
-						}
-						if (newp.right.length() == 0)
-							newp.right += "$";
-						this->P.push_back(newp);
 					}
 				}
 			}
-
 			if (flag == 1)
 			{
 				this->P.erase(this->P.begin() + i);
@@ -188,6 +232,63 @@ void Grammar::first_letter_substitution()
 			}
 		}
 	}
+
+	for (i = 0; i < recur_save.size(); i++)
+	{
+		if (!find_production(this->P, recur_save[i]))
+			this->P.push_back(recur_save[i]);
+	}
+	this->pnum = this->P.size();
+}
+
+// 将不可达的产生式删除
+void Grammar::del_unreachable_production()
+{
+	int i, j;
+	// 记录能够推导到的非终结符集
+	set<char> reachable;
+	stack<char> s;
+	s.push(this->S);
+	while (!s.empty())
+	{
+		char ch = s.top();
+		s.pop();
+		reachable.insert(ch);
+		for (i = 0; i < this->pnum; i++)
+		{
+			if (this->P[i].left == ch)
+			{
+				for (j = 0; j < this->P[i].right.length(); j++)
+				{
+					if (inVn(this->P[i].right[j]))
+					{
+						if (reachable.find(this->P[i].right[j]) == reachable.end())
+						{
+							reachable.insert(this->P[i].right[j]);
+							s.push(this->P[i].right[j]);
+						}
+						
+					}
+				}
+			}
+		}
+	}
+
+	this->nonterminal = reachable;
+	// 遍历产生式集，如果左端不在reachable中，则准备将其删除
+	set<int> del_index;		
+	for (i = 0; i < this->pnum; i++)
+	{
+		if (reachable.find(this->P[i].left) == reachable.end())
+			del_index.insert(i);
+	}
+	// 下标由大到小的删除不可达产生式
+	set<int>::reverse_iterator del_iter;
+	for (del_iter = del_index.rbegin(); del_iter != del_index.rend(); del_iter++)
+	{
+		this->P.erase(this->P.begin() + *del_iter);
+	}
+	this->pnum = this->P.size();
 }
 
 // 提取左公因式
@@ -269,6 +370,88 @@ void Grammar::left_common_factor()
 
 			if (flag == 1)
 			{
+				break;
+			}
+		}
+	}
+}
+
+// 消除左递归
+void Grammar::parsing_left_recursion()
+{
+	int i, j;
+	char new_nt = 90;	// 新增非终结符，从Z开始向A加入
+	int flag = 1;
+	while (flag)
+	{
+		flag = 0;
+		set<char>::iterator nt_it;
+		for (nt_it = this->nonterminal.begin();nt_it != this->nonterminal.end();nt_it++)
+		{
+			set<int> recur_index;	// 左递归产生式集合，如S->Sa, S->Sb
+			set<int> end_index;		// 非递归式集合，作为终结
+			for (i = 0;i < this->pnum;i++)
+			{
+				if (this->P[i].left == *nt_it)
+				{
+					if (this->P[i].left == this->P[i].right[0])
+					{
+						recur_index.insert(i);
+					}
+					else
+					{
+						end_index.insert(i);
+					}
+				}
+			}
+
+			if (recur_index.size() != 0)
+			{
+				flag = 1;
+				while (this->nonterminal.find(new_nt) != this->nonterminal.end())
+					new_nt--;
+				this->nonterminal.insert(new_nt);
+
+				// 对递归部分，构造S'->aS'
+				set<int>::iterator recur_iter;
+				for (recur_iter = recur_index.begin();recur_iter != recur_index.end();recur_iter++)
+				{
+					pstring newp;
+					newp.left = new_nt;
+					newp.right = this->P[*recur_iter].right.substr(1, P[*recur_iter].right.length());
+					newp.right += new_nt;
+					this->P.push_back(newp);
+				}
+
+				// 对非递归部分，构造S->aS'
+				set<int>::iterator end_iter;
+				for (end_iter = end_index.begin();end_iter != end_index.end();end_iter++)
+				{
+					pstring newp;
+					newp.left = *nt_it;
+					if (this->P[*end_iter].right != "$")
+						newp.right = this->P[*end_iter].right;
+					newp.right += new_nt;
+					this->P.push_back(newp);
+				}
+
+				pstring epsilon;
+				epsilon.left = new_nt;
+				epsilon.right = "$";
+				this->P.push_back(epsilon);
+
+				set<int> erase_index(recur_index.begin(), recur_index.end());
+				erase_index.insert(end_index.begin(),end_index.end());
+				set<int>::reverse_iterator erase_it;
+				for (erase_it = erase_index.rbegin();erase_it != erase_index.rend();erase_it++)
+				{
+					this->P.erase(this->P.begin() + *erase_it);
+				}
+			}
+
+			if (flag == 1)
+			{
+				this->pnum = this->P.size();
 				break;
 			}
 		}
@@ -402,7 +585,7 @@ bool Grammar::get_Table()
 	{
 		for (j = 0; j < this->terminal.size(); j++)
 		{
-			this->predict_table[i][j] = 0;
+			this->predict_table[i][j] = -1;
 		}
 	}
 	#pragma endregion
@@ -414,7 +597,7 @@ bool Grammar::get_Table()
 		for (s_iter = this->select_set[i].begin(); s_iter != this->select_set[i].end(); s_iter++)
 		{
 			int column = index_in_terminal(*s_iter);
-			if (this->predict_table[row][column] != 0)
+			if (this->predict_table[row][column] != -1)
 			{
 				return false;
 			}
@@ -432,8 +615,88 @@ bool Grammar::get_Table()
 bool Grammar::is_LL1()
 {
 	if (!get_Table())
+	{
+		this->LL1 = false;
 		return false;
+	}
+	this->LL1 = true;
 	return true;
+}
+
+bool Grammar::grammar_parsing()
+{
+	int i, j = 0;
+	if (this->LL1)
+	{
+		string sentence;
+		cout << "请输入一个句子:";
+		cin >> sentence;
+		for (i = 0; i < sentence.length(); i++)
+		{
+			if (inVn(sentence[i]))
+			{
+				cout << "syntax error! 句中不应出现非终结符" << endl;
+				return false;
+			}
+			if (!(inVn(sentence[i]) || inVt(sentence[i])))
+			{
+				cout << "syntax error! 句中含非法字符" << endl;
+				return false;
+			}
+		}
+		if (sentence[i - 1] != '#')
+			sentence += '#';
+
+		// 构造运算栈，将#和开始符号入栈
+		stack<char> s;
+		s.push('#');
+		s.push(this->S);
+
+		// 定义读头
+		char readhead=sentence[j++];
+		while (s.size()!=1)
+		{
+			char top = s.top();
+			s.pop();
+			
+			if (inVt(top))
+			{
+				if (top != '$')
+				{
+					if (top == readhead)
+						readhead = sentence[j++];
+					else
+					{
+						cout << "syntax error! 无法匹配" << endl;
+						return false;
+					}
+				}
+			}
+			else
+			{
+				int row = index_in_nonterminal(top);
+				int column = index_in_terminal(readhead);
+				int index = this->predict_table[row][column];
+				if (index == -1)
+				{
+					cout << "syntax error! 无法匹配" << endl;
+					return false;
+				}
+				else
+				{
+					int k;
+					for (k = this->P[index].right.length() - 1; k >= 0; k--)
+					{
+						s.push(this->P[index].right[k]);
+					}
+				}
+			}
+		}
+		
+		if (s.top() == readhead)
+			return true;
+	}
+	return false;
 }
 
 // 求target的First集合
@@ -582,9 +845,7 @@ void Grammar::get_Follow()
 	while (flag)
 	{
 		flag = 0;		// 设flag为0，当有修改时设为1
-		
-		set<char>::iterator vn_iter;
-		// 对每个非终结符
+
 		// 对每个产生式
 		for (i = 0; i < this->pnum; i++)
 		{
@@ -595,7 +856,7 @@ void Grammar::get_Follow()
 				if (inVn(rj))
 				{
 					char brj;	// behind rj
-					int psize = this->follow_set[rj].size();
+					int psize = this->follow_set[rj].size();	// previous size，Follow(rj)的原始值
 					if (j < this->P[i].right.length() - 1)	// Follow(rj)+=First(brj)
 					{
 						brj = this->P[i].right[j + 1];
@@ -756,7 +1017,10 @@ void Grammar::printTable()
 	set<char>::iterator it;
 	for (it = this->terminal.begin(); it != this->terminal.end(); it++)
 	{
-		cout << "\t" << *it;
+		if (*it == '$')
+			cout << "\t" << '#';
+		else
+			cout << "\t" << *it;
 	}
 	cout << endl;
 	for (it = this->nonterminal.begin(), i = 0; it != this->nonterminal.end(); it++, i++)
@@ -764,7 +1028,7 @@ void Grammar::printTable()
 		cout << *it;
 		for (j = 0; j < this->terminal.size(); j++)
 		{
-			if (this->predict_table[i][j] != 0)
+			if (this->predict_table[i][j] != -1)
 			{
 				cout << "\t";
 				cout << this->P[this->predict_table[i][j]].left << "->" << this->P[this->predict_table[i][j]].right;
@@ -791,3 +1055,4 @@ Grammar::~Grammar()
 	this->select_set.clear();
 	delete[] this->predict_table;
 }
+
